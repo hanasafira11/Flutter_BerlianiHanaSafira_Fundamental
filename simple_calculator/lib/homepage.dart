@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  double angkaHasil = 0;
+  var txtAngka1 = TextEditingController();
+  var txtAngka2 = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -11,25 +19,25 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           SizedBox(height: 57),
-          isiAngka('Angka Pertama'),
+          isiAngka('Angka Pertama', txtAngka1),
           SizedBox(height: 36),
-          isiAngka('Angka Kedua'),
+          isiAngka('Angka Kedua', txtAngka2),
           SizedBox(height: 50),
           hasil(),
           SizedBox(height: 57),
           Row(
             children: [
-              tombolKiri(() {}, '+'),
+              tombolKiri(penjumlahan, '+'),
               SizedBox(width: 42),
-              tombolKanan(() {}, '-'),
+              tombolKanan(pengurangan, '-'),
             ],
           ),
           SizedBox(height: 36),
           Row(
             children: [
-              tombolKiri(() {}, 'X'),
+              tombolKiri(perkalian, 'X'),
               SizedBox(width: 42),
-              tombolKanan(() {}, ':'),
+              tombolKanan(pembagian, ':'),
             ],
           ),
         ],
@@ -54,12 +62,13 @@ class HomePage extends StatelessWidget {
         preferredSize: Size.fromHeight(80));
   }
 
-  Widget isiAngka(String hurufKu) {
+  Widget isiAngka(String hurufKu, TextEditingController controller) {
     return Container(
       height: 70,
       width: 317,
       margin: EdgeInsets.only(left: 36, right: 36),
       child: TextField(
+        controller: controller,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
             hintText: hurufKu,
@@ -79,7 +88,7 @@ class HomePage extends StatelessWidget {
       width: 317,
       margin: EdgeInsets.only(left: 36, right: 36),
       color: Color(0xFFFFE7D1),
-      child: Center(child: Text('0', style: TextStyle(fontSize: 40))),
+      child: Center(child: Text('$angkaHasil', style: TextStyle(fontSize: 40))),
     );
   }
 
@@ -115,5 +124,29 @@ class HomePage extends StatelessWidget {
           onPressed: pasDitekan,
           child: Center(child: Text(simbol))),
     );
+  }
+
+  void penjumlahan() {
+    setState(() {
+      angkaHasil = double.parse(txtAngka1.text) + double.parse(txtAngka2.text);
+    });
+  }
+
+  void pengurangan() {
+    setState(() {
+      angkaHasil = double.parse(txtAngka1.text) - double.parse(txtAngka2.text);
+    });
+  }
+
+  void perkalian() {
+    setState(() {
+      angkaHasil = double.parse(txtAngka1.text) * double.parse(txtAngka2.text);
+    });
+  }
+
+  void pembagian() {
+    setState(() {
+      angkaHasil = double.parse(txtAngka1.text) / double.parse(txtAngka2.text);
+    });
   }
 }
